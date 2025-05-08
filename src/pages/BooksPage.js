@@ -10,7 +10,26 @@ import { Link } from "react-router-dom";
 export default function BooksPage() {
     const [books, setBooks] = useState([]);
 
-    // 1. Fetch danh sách sách khi component mount
+    const handleDelete = async (id) => {
+        if (!window.confirm("Bạn chắc chắn muốn xoá cuốn này chứ?")) return;
+        try {
+            const res = await fetch(`http://localhost:8080/book/delete-book?id=${id}`, {
+                method: "POST",
+            });
+            if (!res.ok) throw new Error(res.status);
+            const { data: success } = await res.json();
+            if (success) {
+                // cập nhật lại state, loại bỏ cuốn vừa xóa
+                setBooks((prev) => prev.filter((b) => b.id !== id));
+            } else {
+                alert("Xoá thất bại");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Lỗi kết nối tới server");
+        }
+    };
+
     useEffect(() => {
         const fetchBooks = async () => {
             try {
@@ -63,26 +82,25 @@ export default function BooksPage() {
                                 <td className="p-2 border">{book.stockQuantity}</td>
                                 <td className="p-2 border text-center">{book.createdAt}</td>
                                 <td className="p-2 border text-center">
-                                    <Link
+                                    {/* <Link
                                         to={`/books/edit/${book.id}`}
                                         className="text-blue-600 hover:underline mr-2"
                                     >
                                         Sửa
-                                    </Link>
-                                    <Link
-                                        to={`/books/delete/${book.id}`}
-                                        className="text-blue-600 hover:underline mr-2"
+                                    </Link> */}
+                                    <button
+                                        onClick={() => handleDelete(book.id)}
+                                        className="text-red-600 hover:underline"
                                     >
                                         Xoá
-                                    </Link>
-                                    {/* <button className="text-red-600 hover:underline">Xoá</button> */}
+                                    </button>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div >
     );
 }
 
