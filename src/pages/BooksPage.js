@@ -33,7 +33,7 @@ export default function BooksPage() {
     useEffect(() => {
         const fetchBooks = async () => {
             try {
-                const res = await fetch("http://localhost:8080/book/show-listof-all-books", {
+                const res = await fetch("http://localhost:8080/book/show-all-books", {
                     method: "GET",
                 });
                 if (!res.ok) throw new Error(res.status);
