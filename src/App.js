@@ -4,6 +4,8 @@ import BooksPage from "./pages/BooksPage";
 import AddBookPage from "./pages/AddBookPage";
 import BorrowsPage from "./pages/BorrowsPage";
 import BorrowForm from "./pages/BorrowForm";
+import ReaderManagementPage from "./pages/ReaderManagementPage";
+
 
 function App() {
   return (
@@ -13,9 +15,11 @@ function App() {
         <Route path="/books" element={<BooksPage />} />
         <Route path="/books/add" element={<AddBookPage />} />
         {/* <Route path="/books/edit/:id" element={<BookForm />} /> */}
+        <Route path="/reader-management" element={<ReaderManagementPage />} />
         <Route path="/borrows" element={<BorrowsPage />} />
         <Route path="/borrows/add" element={<BorrowForm />} />
         <Route path="/" element={<Navigate to="/login" />} />
+
       </Routes>
     </Router>
   );
