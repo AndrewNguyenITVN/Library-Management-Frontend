@@ -4,6 +4,7 @@ export default function BorrowsPage() {
     const [borrowings, setBorrowings] = useState([]);
     const [identityCard, setIdentityCard] = useState('');
     const [bookSeri, setBookSeri] = useState('');
+    const [searchIdentityCard, setSearchIdentityCard] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -29,6 +30,35 @@ export default function BorrowsPage() {
         } catch (error) {
             console.error('Error fetching borrowings:', error);
             setError('Error fetching borrowings. Please check the console.');
+            setBorrowings([]);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleSearchByIdentityCard = async (e) => {
+        e.preventDefault();
+        if (!searchIdentityCard) {
+            alert('Vui lòng nhập số ID độc giả');
+            return;
+        }
+        setIsLoading(true);
+        setError(null);
+        try {
+            const response = await fetch(`http://localhost:8080/borrowing/by-reader?identityCard=${encodeURIComponent(searchIdentityCard)}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            if (data.success) {
+                setBorrowings(data.data || []);
+            } else {
+                setError(data.desc || 'Không tìm thấy thông tin mượn trả');
+                setBorrowings([]);
+            }
+        } catch (error) {
+            console.error('Error searching borrowings:', error);
+            setError('Lỗi khi tìm kiếm. Vui lòng kiểm tra console.');
             setBorrowings([]);
         } finally {
             setIsLoading(false);
@@ -115,6 +145,7 @@ export default function BorrowsPage() {
                     Quản Lý Mượn Trả Sách
                 </h1>
 
+
                 {/* Borrow Book Form */}
                 <div className="mb-10 p-6 bg-blue-50 rounded-lg shadow-md">
                     <h2 className="text-2xl font-semibold mb-6 text-blue-600">Mượn Sách</h2>
@@ -137,6 +168,37 @@ export default function BorrowsPage() {
                         </button>
                     </form>
                 </div>
+                {/* Search by Identity Card Form */}
+                <div className="mb-10 p-6 bg-purple-50 rounded-lg shadow-md">
+                    <h2 className="text-2xl font-semibold mb-6 text-purple-600">Tìm Kiếm Theo ID Độc Giả</h2>
+                    <form onSubmit={handleSearchByIdentityCard} className="flex space-x-4">
+                        <div className="flex-grow">
+                            <input
+                                type="text"
+                                value={searchIdentityCard}
+                                onChange={(e) => setSearchIdentityCard(e.target.value)}
+                                placeholder="Nhập số ID độc giả"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm"
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            disabled={isLoading}
+                            className="bg-purple-600 text-white py-2 px-6 rounded-md font-semibold hover:bg-purple-700 transition duration-150 ease-in-out shadow-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {isLoading ? 'Đang tìm kiếm...' : 'Tìm Kiếm'}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={fetchAllBorrowings}
+                            disabled={isLoading}
+                            className="bg-gray-500 text-white py-2 px-6 rounded-md font-semibold hover:bg-gray-600 transition duration-150 ease-in-out shadow-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            Xem Tất Cả
+                        </button>
+                    </form>
+                </div>
+
 
                 {/* Borrowings List */}
                 <div>
