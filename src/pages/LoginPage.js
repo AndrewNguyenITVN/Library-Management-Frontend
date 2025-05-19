@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function LoginPage() {
+export default function LoginPage({ onLoginSuccess }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
@@ -17,7 +17,8 @@ export default function LoginPage() {
             if (!response.ok) throw new Error(response.status);
             const data = await response.json();
             if (data.success) {
-                navigate("/books");
+                onLoginSuccess(); // Call the callback to update authentication state
+                navigate("/borrows");
             } else {
                 alert("Đăng nhập thất bại");
             }
@@ -44,7 +45,7 @@ export default function LoginPage() {
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         required
-                        placeholder="Nhập tên đăng nhập "
+                        placeholder="Nhập tên đăng nhập"
                     />
                 </div>
                 <div className="mb-6">
