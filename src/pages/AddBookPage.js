@@ -6,6 +6,7 @@ export default function AddBookPage() {
     const [nameBook, setNameBook] = useState("");
     const [categoryId, setCategoryId] = useState("");
     const [stockQuantity, setStockQuantity] = useState("");
+    const [bookSeri, setBookSeri] = useState("");
     const [file, setFile] = useState(null);
     const navigate = useNavigate();
 
@@ -19,6 +20,7 @@ export default function AddBookPage() {
         const formData = new FormData();
         formData.append("file", file);
         formData.append("nameBook", nameBook);
+        formData.append("bookSeri", bookSeri);
         formData.append("categoryId", categoryId);
         formData.append("stockQuantity", stockQuantity);
 
@@ -64,6 +66,18 @@ export default function AddBookPage() {
                 </div>
 
                 <div className="mb-4">
+                    <label className="block mb-1 font-semibold">Mã sách</label>
+                    <input
+                        type="text"
+                        className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        value={bookSeri}
+                        onChange={(e) => setBookSeri(e.target.value)}
+                        required
+                        placeholder="Nhập bookSeri"
+                    />
+                </div>
+
+                <div className="mb-4">
                     <label className="block mb-1 font-semibold">Thể loại (ID)</label>
                     <input
                         type="number"
@@ -74,6 +88,8 @@ export default function AddBookPage() {
                         placeholder="Nhập categoryId"
                     />
                 </div>
+
+
 
                 <div className="mb-4">
                     <label className="block mb-1 font-semibold">Số lượng</label>
