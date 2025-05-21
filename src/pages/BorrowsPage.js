@@ -133,8 +133,8 @@ export default function BorrowsPage() {
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
+            // hour: '2-digit',
+            // minute: '2-digit',
         });
     };
 
@@ -214,11 +214,11 @@ export default function BorrowsPage() {
                                     <tr>
                                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">STT</th>
                                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Độc Giả</th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Số ID Độc Giả</th>
                                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sách</th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Số Seri Sách</th>
                                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ngày Mượn</th>
-                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ngày Trả</th>
                                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hạn Trả</th>
-                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng Thái</th>
                                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thao Tác</th>
                                     </tr>
                                 </thead>
@@ -227,13 +227,11 @@ export default function BorrowsPage() {
                                         <tr key={borrowing.idBorrow} className="hover:bg-gray-50 transition duration-150">
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{index + 1}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{borrowing.readerName}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{borrowing.identityCard}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{borrowing.bookName}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{borrowing.bookSeri}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{formatDate(borrowing.borrowedAt)}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{formatDate(borrowing.returnedAt)}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{formatDate(borrowing.dueDate)}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                                {borrowing.status ? 'Đã trả' : 'Đang mượn'}
-                                            </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                                                 {!borrowing.status && (
                                                     <button onClick={() => handleReturnBook(borrowing.idBorrow)} disabled={isLoading}
