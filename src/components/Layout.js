@@ -9,6 +9,7 @@ export default function Layout({ children }) {
         { path: '/borrows', label: 'Quản Lý Mượn Trả', icon: '📖' },
         { path: '/books', label: 'Quản Lý Sách', icon: '📚' },
         { path: '/reader-management', label: 'Quản Lý Độc Giả', icon: '👥' },
+        { path: '/add-user', label: 'Thêm Người Dùng', icon: '👤' },
         { path: '/login', label: 'Đăng xuất', icon: '' },
     ];
 

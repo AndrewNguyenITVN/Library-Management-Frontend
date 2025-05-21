@@ -6,6 +6,7 @@ import AddBookPage from "./pages/AddBookPage";
 import BorrowsPage from "./pages/BorrowsPage";
 import BorrowForm from "./pages/BorrowForm";
 import ReaderManagementPage from "./pages/ReaderManagementPage";
+import AddUserPage from "./pages/AddUserPage";
 import Layout from "./components/Layout";
 
 function App() {
@@ -63,6 +64,14 @@ function App() {
           element={
             <ProtectedRoute>
               <BorrowForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/add-user"
+          element={
+            <ProtectedRoute>
+              <AddUserPage />
             </ProtectedRoute>
           }
         />
