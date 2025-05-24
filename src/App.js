@@ -7,6 +7,7 @@ import BorrowsPage from "./pages/BorrowsPage";
 import BorrowForm from "./pages/BorrowForm";
 import ReaderManagementPage from "./pages/ReaderManagementPage";
 import AddUserPage from "./pages/AddUserPage";
+import OverdueBorrowersPage from "./pages/OverdueBorrowersPage";
 import Layout from "./components/Layout";
 
 function App() {
@@ -56,6 +57,14 @@ function App() {
           element={
             <ProtectedRoute>
               <BorrowsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/borrows/overdue"
+          element={
+            <ProtectedRoute>
+              <OverdueBorrowersPage />
             </ProtectedRoute>
           }
         />
