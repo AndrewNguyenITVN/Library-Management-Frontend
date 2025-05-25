@@ -8,6 +8,7 @@ import BorrowForm from "./pages/BorrowForm";
 import ReaderManagementPage from "./pages/ReaderManagementPage";
 import AddUserPage from "./pages/AddUserPage";
 import OverdueBorrowersPage from "./pages/OverdueBorrowersPage";
+import BorrowingStatsPage from "./pages/BorrowingStatsPage";
 import Layout from "./components/Layout";
 
 function App() {
@@ -65,6 +66,14 @@ function App() {
           element={
             <ProtectedRoute>
               <OverdueBorrowersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/borrows/stats"
+          element={
+            <ProtectedRoute>
+              <BorrowingStatsPage />
             </ProtectedRoute>
           }
         />
