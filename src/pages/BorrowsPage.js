@@ -66,14 +66,39 @@ export default function BorrowsPage() {
         }
     };
 
+    const validateBorrowInputs = () => {
+        if (!identityCard.trim()) {
+            setError('Vui lòng nhập số ID độc giả');
+            return false;
+        }
+        if (!bookSeri.trim()) {
+            setError('Vui lòng nhập số seri sách');
+            return false;
+        }
+        if (!/^\d+$/.test(identityCard)) {
+            setError('Số ID độc giả phải là số');
+            return false;
+        }
+        if (!/^\d+$/.test(bookSeri)) {
+            setError('Số seri sách phải là số');
+            return false;
+        }
+        return true;
+    };
+
     const handleBorrowBook = async (e) => {
         e.preventDefault();
-        if (!identityCard || !bookSeri) {
-            alert('Please enter both Identity Card and Book Serial Number.');
+        setError(null);
+
+        if (!validateBorrowInputs()) {
             return;
         }
+
+        if (!window.confirm('Bạn có chắc chắn muốn mượn sách này?')) {
+            return;
+        }
+
         setIsLoading(true);
-        setError(null);
         try {
             const response = await authFetch(`http://localhost:8080/borrowing/borrow?identityCard=${encodeURIComponent(identityCard)}&bookSeri=${encodeURIComponent(bookSeri)}`, {
                 method: 'POST',
@@ -83,16 +108,16 @@ export default function BorrowsPage() {
             }
             const data = await response.json();
             if (data.success) {
-                alert('Book borrowed successfully!');
+                alert('Mượn sách thành công!');
                 fetchAllBorrowings();
                 setIdentityCard('');
                 setBookSeri('');
             } else {
-                setError(data.desc || 'Failed to borrow book');
+                setError(data.desc || 'Mượn sách thất bại');
             }
         } catch (error) {
             console.error('Error borrowing book:', error);
-            setError('Error borrowing book. Please check the console.');
+            setError('Lỗi khi mượn sách. Vui lòng thử lại sau.');
         } finally {
             setIsLoading(false);
         }
@@ -100,9 +125,14 @@ export default function BorrowsPage() {
 
     const handleReturnBook = async (borrowingId) => {
         if (!borrowingId) {
-            alert('Invalid borrowing ID.');
+            setError('ID mượn sách không hợp lệ');
             return;
         }
+
+        if (!window.confirm('Bạn có chắc chắn muốn trả sách này?')) {
+            return;
+        }
+
         setIsLoading(true);
         setError(null);
         try {
@@ -114,14 +144,14 @@ export default function BorrowsPage() {
             }
             const data = await response.json();
             if (data.success) {
-                alert('Book returned successfully!');
+                alert('Trả sách thành công!');
                 fetchAllBorrowings();
             } else {
-                setError(data.desc || 'Failed to return book');
+                setError(data.desc || 'Trả sách thất bại');
             }
         } catch (error) {
             console.error('Error returning book:', error);
-            setError('Error returning book. Please check the console.');
+            setError('Lỗi khi trả sách. Vui lòng thử lại sau.');
         } finally {
             setIsLoading(false);
         }
