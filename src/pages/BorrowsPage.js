@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import authFetch from '../utils/authFetch';
 
 export default function BorrowsPage() {
     const [borrowings, setBorrowings] = useState([]);
@@ -16,7 +17,7 @@ export default function BorrowsPage() {
         setIsLoading(true);
         setError(null);
         try {
-            const response = await fetch('http://localhost:8080/borrowing/all');
+            const response = await authFetch('http://localhost:8080/borrowing/all');
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -45,7 +46,7 @@ export default function BorrowsPage() {
         setIsLoading(true);
         setError(null);
         try {
-            const response = await fetch(`http://localhost:8080/borrowing/by-reader?identityCard=${encodeURIComponent(searchIdentityCard)}`);
+            const response = await authFetch(`http://localhost:8080/borrowing/by-reader?identityCard=${encodeURIComponent(searchIdentityCard)}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -74,7 +75,7 @@ export default function BorrowsPage() {
         setIsLoading(true);
         setError(null);
         try {
-            const response = await fetch(`http://localhost:8080/borrowing/borrow?identityCard=${encodeURIComponent(identityCard)}&bookSeri=${encodeURIComponent(bookSeri)}`, {
+            const response = await authFetch(`http://localhost:8080/borrowing/borrow?identityCard=${encodeURIComponent(identityCard)}&bookSeri=${encodeURIComponent(bookSeri)}`, {
                 method: 'POST',
             });
             if (!response.ok) {
@@ -105,7 +106,7 @@ export default function BorrowsPage() {
         setIsLoading(true);
         setError(null);
         try {
-            const response = await fetch(`http://localhost:8080/borrowing/return?borrowingId=${borrowingId}`, {
+            const response = await authFetch(`http://localhost:8080/borrowing/return?borrowingId=${borrowingId}`, {
                 method: 'PUT',
             });
             if (!response.ok) {

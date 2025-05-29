@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom'; // Removed unused import
+import authFetch from '../utils/authFetch';
 
 export default function AddUserPage() {
-    const navigate = useNavigate();
+    // const navigate = useNavigate(); // Removed unused variable
     const [formData, setFormData] = useState({
         username: '',
         password: '',
@@ -26,13 +27,18 @@ export default function AddUserPage() {
         setSuccess('');
 
         try {
-            const response = await fetch('http://localhost:8080/login/add-user', {
+            const response = await authFetch('http://localhost:8080/login/add-user', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams(formData)
             });
+
+            if (!response.ok) {
+                const errorData = await response.text();
+                throw new Error(errorData || `Request failed with status ${response.status}`);
+            }
 
             const data = await response.json();
 

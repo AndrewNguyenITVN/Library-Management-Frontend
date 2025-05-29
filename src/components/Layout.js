@@ -1,9 +1,17 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-export default function Layout({ children }) {
+export default function Layout({ children, handleLogout }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const location = useLocation();
+    const navigate = useNavigate();
+
+    const onLogoutClick = () => {
+        if (handleLogout) {
+            handleLogout();
+        }
+        navigate('/login');
+    };
 
     const menuItems = [
         { path: '/borrows', label: 'Quản Lý Mượn Trả', icon: '📖' },
@@ -12,7 +20,6 @@ export default function Layout({ children }) {
         { path: '/books', label: 'Quản Lý Sách', icon: '📚' },
         { path: '/reader-management', label: 'Quản Lý Độc Giả', icon: '👥' },
         { path: '/add-user', label: 'Thêm Người Dùng', icon: '👤' },
-        { path: '/login', label: 'Đăng xuất', icon: '' },
     ];
 
     return (
@@ -36,19 +43,38 @@ export default function Layout({ children }) {
                     <nav>
                         <ul className="space-y-2">
                             {menuItems.map((item) => (
-                                <li key={item.path}>
-                                    <Link
-                                        to={item.path}
-                                        className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${location.pathname === item.path
-                                            ? 'bg-blue-100 text-blue-600'
-                                            : 'hover:bg-gray-100'
-                                            }`}
-                                    >
-                                        <span className="text-xl">{item.icon}</span>
-                                        <span>{item.label}</span>
-                                    </Link>
+                                <li key={item.path || item.label}>
+                                    {item.action ? (
+                                        <button
+                                            onClick={item.action}
+                                            className={`flex items-center space-x-3 p-3 rounded-lg transition-colors w-full text-left hover:bg-gray-100`}
+                                        >
+                                            <span className="text-xl">{item.icon || '🚪'}</span>
+                                            <span>{item.label}</span>
+                                        </button>
+                                    ) : (
+                                        <Link
+                                            to={item.path}
+                                            className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${location.pathname === item.path
+                                                ? 'bg-blue-100 text-blue-600'
+                                                : 'hover:bg-gray-100'
+                                                }`}
+                                        >
+                                            <span className="text-xl">{item.icon}</span>
+                                            <span>{item.label}</span>
+                                        </Link>
+                                    )}
                                 </li>
                             ))}
+                            <li>
+                                <button
+                                    onClick={onLogoutClick}
+                                    className={`flex items-center space-x-3 p-3 rounded-lg transition-colors w-full text-left hover:bg-gray-100`}
+                                >
+                                    <span className="text-xl">🚪</span>
+                                    <span>Đăng xuất</span>
+                                </button>
+                            </li>
                         </ul>
                     </nav>
                 </div>

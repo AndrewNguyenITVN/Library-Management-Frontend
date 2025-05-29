@@ -1,5 +1,5 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import LoginPage from "./pages/LoginPage";
 import BooksPage from "./pages/BooksPage";
 import AddBookPage from "./pages/AddBookPage";
@@ -12,13 +12,32 @@ import BorrowingStatsPage from "./pages/BorrowingStatsPage";
 import Layout from "./components/Layout";
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('jwtToken'));
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setIsAuthenticated(!!localStorage.getItem('jwtToken'));
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
+
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('jwtToken');
+    setIsAuthenticated(false);
+  };
 
   const ProtectedRoute = ({ children }) => {
     if (!isAuthenticated) {
-      return <Navigate to="/login" />;
+      return <Navigate to="/login" replace />;
     }
-    return <Layout>{children}</Layout>;
+    return <Layout handleLogout={handleLogout}>{children}</Layout>;
   };
 
   return (
@@ -26,7 +45,7 @@ function App() {
       <Routes>
         <Route
           path="/login"
-          element={<LoginPage onLoginSuccess={() => setIsAuthenticated(true)} />}
+          element={<LoginPage onLoginSuccess={handleLoginSuccess} />}
         />
         <Route
           path="/books"
@@ -93,7 +112,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/" element={isAuthenticated ? <Navigate to="/borrows" replace /> : <Navigate to="/login" replace />} />
       </Routes>
     </Router>
   );

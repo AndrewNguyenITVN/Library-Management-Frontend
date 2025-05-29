@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import authFetch from '../utils/authFetch';
 
 export default function ReaderManagementPage() {
     const [readers, setReaders] = useState([]);
@@ -14,7 +15,7 @@ export default function ReaderManagementPage() {
 
     const fetchAllReaders = async () => {
         try {
-            const response = await fetch('http://localhost:8080/reader/get-all-users');
+            const response = await authFetch('http://localhost:8080/reader/get-all-users');
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -39,7 +40,7 @@ export default function ReaderManagementPage() {
             return;
         }
         try {
-            const response = await fetch(`http://localhost:8080/reader/insert-reader?nameReader=${encodeURIComponent(nameReader)}&identityCard=${encodeURIComponent(identityCard)}&phone=${encodeURIComponent(phone)}`, {
+            const response = await authFetch(`http://localhost:8080/reader/insert-reader?nameReader=${encodeURIComponent(nameReader)}&identityCard=${encodeURIComponent(identityCard)}&phone=${encodeURIComponent(phone)}`, {
                 method: 'POST',
             });
             if (!response.ok) {
@@ -64,7 +65,7 @@ export default function ReaderManagementPage() {
     const handleSearchByName = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`http://localhost:8080/reader/search?nameReader=${encodeURIComponent(searchName)}`);
+            const response = await authFetch(`http://localhost:8080/reader/search?nameReader=${encodeURIComponent(searchName)}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -85,7 +86,7 @@ export default function ReaderManagementPage() {
     const handleSearchByIdCard = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`http://localhost:8080/reader/search-by-idcard?identityCard=${encodeURIComponent(searchIdCard)}`);
+            const response = await authFetch(`http://localhost:8080/reader/search-by-idcard?identityCard=${encodeURIComponent(searchIdCard)}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }

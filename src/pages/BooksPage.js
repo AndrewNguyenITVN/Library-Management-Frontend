@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import authFetch from '../utils/authFetch';
 
 // const mockBooks = [
 //     { id: 1, title: "Lập trình Java", author: "Nguyễn Văn A", year: 2020 },
@@ -67,12 +68,12 @@ export default function BooksPage() {
         formDataToSend.append('categoryId', formData.categoryId);
 
         try {
-            const res = await fetch(`http://localhost:8080/book/update/${selectedBook.id}`, {
+            const res = await authFetch(`http://localhost:8080/book/update/${selectedBook.id}`, {
                 method: 'PUT',
                 body: formDataToSend
             });
 
-            if (!res.ok) throw new Error(res.status);
+            if (!res.ok) throw new Error(await res.text());
             const { success } = await res.json();
 
             if (success) {
@@ -91,10 +92,10 @@ export default function BooksPage() {
 
     const fetchBooks = async () => {
         try {
-            const res = await fetch("http://localhost:8080/book/show-all-books", {
+            const res = await authFetch("http://localhost:8080/book/show-all-books", {
                 method: "GET",
             });
-            if (!res.ok) throw new Error(res.status);
+            if (!res.ok) throw new Error(await res.text());
             const json = await res.json();
             if (json.success) {
                 setBooks(json.data);

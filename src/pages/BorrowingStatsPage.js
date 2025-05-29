@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import authFetch from '../utils/authFetch';
 
 export default function BorrowingStatsPage() {
     const [stats, setStats] = useState(null);
@@ -34,7 +35,7 @@ export default function BorrowingStatsPage() {
                 url += `&month=${filters.month}`;
             }
 
-            const response = await fetch(url);
+            const response = await authFetch(url);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -194,8 +195,8 @@ export default function BorrowingStatsPage() {
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{formatDate(borrowing.dueDate)}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm">
                                                 <span className={`px-2 py-1 rounded-full text-xs font-semibold ${borrowing.status
-                                                        ? 'bg-green-100 text-green-800'
-                                                        : 'bg-yellow-100 text-yellow-800'
+                                                    ? 'bg-green-100 text-green-800'
+                                                    : 'bg-yellow-100 text-yellow-800'
                                                     }`}>
                                                     {borrowing.status ? 'Đã Trả' : 'Chưa Trả'}
                                                 </span>

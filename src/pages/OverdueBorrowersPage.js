@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import authFetch from '../utils/authFetch';
 
 export default function OverdueBorrowersPage() {
     const [overdueBorrowings, setOverdueBorrowings] = useState([]);
@@ -13,7 +14,7 @@ export default function OverdueBorrowersPage() {
         setIsLoading(true);
         setError(null);
         try {
-            const response = await fetch('http://localhost:8080/borrowing/overdue');
+            const response = await authFetch('http://localhost:8080/borrowing/overdue');
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }

@@ -17,6 +17,15 @@ export default function LoginPage({ onLoginSuccess }) {
             if (!response.ok) throw new Error(response.status);
             const data = await response.json();
             if (data.success) {
+                // Store the token
+                if (data.data) { // Changed from data.token to data.data
+                    localStorage.setItem('jwtToken', data.data);
+                } else {
+                    // Handle case where token is not in the expected field
+                    console.error('Login successful, but no token received.');
+                    alert('Lỗi đăng nhập: Không nhận được token xác thực.');
+                    return; // Do not proceed if token is missing
+                }
                 onLoginSuccess(); // Call the callback to update authentication state
                 navigate("/borrows");
             } else {

@@ -1,6 +1,7 @@
 // src/pages/AddBookPage.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import authFetch from '../utils/authFetch';
 
 export default function AddBookPage() {
     const [nameBook, setNameBook] = useState("");
@@ -25,11 +26,11 @@ export default function AddBookPage() {
         formData.append("stockQuantity", stockQuantity);
 
         try {
-            const res = await fetch("http://localhost:8080/book/add-book", {
+            const res = await authFetch("http://localhost:8080/book/add-book", {
                 method: "POST",
                 body: formData,
             });
-            if (!res.ok) throw new Error(res.status);
+            if (!res.ok) throw new Error(await res.text());
             const json = await res.json();
             if (json.data) {
                 alert("Thêm sách thành công!");
