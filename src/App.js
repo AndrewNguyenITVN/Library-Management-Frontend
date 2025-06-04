@@ -9,6 +9,7 @@ import ReaderManagementPage from "./pages/ReaderManagementPage";
 import AddUserPage from "./pages/AddUserPage";
 import OverdueBorrowersPage from "./pages/OverdueBorrowersPage";
 import BorrowingStatsPage from "./pages/BorrowingStatsPage";
+import FinePaymentPage from "./pages/FinePaymentPage";
 import Layout from "./components/Layout";
 
 function App() {
@@ -109,6 +110,14 @@ function App() {
           element={
             <ProtectedRoute>
               <AddUserPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/fine-payments"
+          element={
+            <ProtectedRoute>
+              <FinePaymentPage />
             </ProtectedRoute>
           }
         />

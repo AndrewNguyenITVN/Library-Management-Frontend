@@ -3,8 +3,8 @@ import authFetch from '../utils/authFetch';
 
 export default function BorrowsPage() {
     const [borrowings, setBorrowings] = useState([]);
-    const [identityCard, setIdentityCard] = useState('');
-    const [bookSeri, setBookSeri] = useState('');
+    const [readerId, setReaderId] = useState('');
+    const [bookId, setBookId] = useState('');
     const [searchIdentityCard, setSearchIdentityCard] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -67,20 +67,20 @@ export default function BorrowsPage() {
     };
 
     const validateBorrowInputs = () => {
-        if (!identityCard.trim()) {
-            setError('Vui lòng nhập số ID độc giả');
+        if (!readerId.trim()) {
+            setError('Vui lòng nhập ID độc giả');
             return false;
         }
-        if (!bookSeri.trim()) {
-            setError('Vui lòng nhập số seri sách');
+        if (!bookId.trim()) {
+            setError('Vui lòng nhập ID sách');
             return false;
         }
-        if (!/^\d+$/.test(identityCard)) {
-            setError('Số ID độc giả phải là số');
+        if (!/^\d+$/.test(readerId)) {
+            setError('ID độc giả phải là số');
             return false;
         }
-        if (!/^\d+$/.test(bookSeri)) {
-            setError('Số seri sách phải là số');
+        if (!/^\d+$/.test(bookId)) {
+            setError('ID sách phải là số');
             return false;
         }
         return true;
@@ -88,38 +88,30 @@ export default function BorrowsPage() {
 
     const handleBorrowBook = async (e) => {
         e.preventDefault();
-        setError(null);
-
-        if (!validateBorrowInputs()) {
-            return;
-        }
-
-        if (!window.confirm('Bạn có chắc chắn muốn mượn sách này?')) {
-            return;
-        }
-
-        setIsLoading(true);
         try {
-            const response = await authFetch(`http://localhost:8080/borrowing/borrow?identityCard=${encodeURIComponent(identityCard)}&bookSeri=${encodeURIComponent(bookSeri)}`, {
+            const response = await authFetch('http://localhost:8080/borrow/add', {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    readerId: readerId,
+                    bookId: bookId,
+                    notes: ''
+                })
             });
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-            if (data.success) {
+
+            if (response.ok) {
                 alert('Mượn sách thành công!');
+                setReaderId('');
+                setBookId('');
                 fetchAllBorrowings();
-                setIdentityCard('');
-                setBookSeri('');
             } else {
-                setError(data.desc || 'Mượn sách thất bại');
+                alert('Mượn sách thất bại!');
             }
         } catch (error) {
-            console.error('Error borrowing book:', error);
-            setError('Lỗi khi mượn sách. Vui lòng thử lại sau.');
-        } finally {
-            setIsLoading(false);
+            console.error('Error:', error);
+            alert('Có lỗi xảy ra khi mượn sách!');
         }
     };
 
@@ -183,14 +175,28 @@ export default function BorrowsPage() {
                     <form onSubmit={handleBorrowBook} className="space-y-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label htmlFor="identityCard" className="block mb-1 font-medium text-gray-700">Số ID Độc Giả</label>
-                                <input id="identityCard" type="text" value={identityCard} onChange={(e) => setIdentityCard(e.target.value)} placeholder="Nhập số ID độc giả" required
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm" />
+                                <label htmlFor="readerId" className="block mb-1 font-medium text-gray-700">ID Độc Giả</label>
+                                <input
+                                    id="readerId"
+                                    type="text"
+                                    value={readerId}
+                                    onChange={(e) => setReaderId(e.target.value)}
+                                    placeholder="Nhập ID độc giả"
+                                    required
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+                                />
                             </div>
                             <div>
-                                <label htmlFor="bookSeri" className="block mb-1 font-medium text-gray-700">Số Seri Sách</label>
-                                <input id="bookSeri" type="text" value={bookSeri} onChange={(e) => setBookSeri(e.target.value)} placeholder="Nhập số seri sách" required
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm" />
+                                <label htmlFor="bookId" className="block mb-1 font-medium text-gray-700">ID Sách</label>
+                                <input
+                                    id="bookId"
+                                    type="text"
+                                    value={bookId}
+                                    onChange={(e) => setBookId(e.target.value)}
+                                    placeholder="Nhập ID sách"
+                                    required
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+                                />
                             </div>
                         </div>
                         <button type="submit" disabled={isLoading}
